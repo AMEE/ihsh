@@ -1,0 +1,10 @@
+ihsh is an HTTP shell written in Ruby that lets you interact with remote web servers
+in a simple way. It includes XPath support for parsing result documents.
+
+Usage:
+
+get 'http://www.google.com'
+get 'http://my.private.com', :username => 'foo', :password => 'bar'
+get 'http://my.api.com', :content_type => 'application/xml'
+
+xpath(result, '//MyInterestingNode/text()')
