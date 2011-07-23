@@ -3,8 +3,9 @@ in a simple way. It includes XPath support for parsing result documents.
 
 Usage:
 
-get 'http://www.google.com'
-get 'http://my.private.com', :username => 'foo', :password => 'bar'
-get 'http://my.api.com', :content_type => 'application/xml'
+result = get 'http://www.google.com'
+result = get 'http://my.private.com', :username => 'foo', :password => 'bar'
+result = get 'http://my.api.com', :accept => 'application/xml'
+result = post 'http://my.api.com', :accept => 'application/xml', :body => 'foo=bar&baz=qux'
 
-xpath(result, '//MyInterestingNode/text()')
+text = xpath(result, '//MyInterestingNode/text()').to_s

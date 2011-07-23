@@ -3,20 +3,26 @@ require 'net/https'
 require 'nokogiri'
 
 def get(url, options = {})
-  request(:get, url, options)
+  request(Net::HTTP::Get, url, options)
 end
 
-def request(method, url, options = {})
+def post(url, options = {})
+  request(Net::HTTP::Post, url, options)
+end
+
+def request(req_type, url, options = {})
   url = URI.parse(url)
   # Make connection to server
   http = Net::HTTP.new(url.host, url.port)
   if url.port == 443
     http.use_ssl = true
-    #http.verify_mode = OpenSSL::SSL::NO_VERIFY
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
   end
   # Create request
-  req = Net::HTTP::Get.new(url.path)
-  req['Accept'] = options.delete(:content_type) if options[:content_type]
+  req = req_type.new(url.request_uri)
+  req['Accept'] = options.delete(:accept) if options[:accept]
+  req['ContentType'] = options.delete(:content_type) if options[:content_type]
+  req.body = options.delete(:body) if options[:body]
   if options[:username] && options[:password]
     req.basic_auth options.delete(:username), options.delete(:password)
   end
@@ -24,6 +30,7 @@ def request(method, url, options = {})
   http.start do
     response = http.request req
   end
+  puts response.code.to_s
   return response.body
 end
 
